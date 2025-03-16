@@ -30,17 +30,21 @@ class LoginScreenController with ChangeNotifier {
         log(role);
 
         if (role == 'user') {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+            (route) => false,
+          );
         } else if (role == 'admin') {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AdminScreen(),
-              ));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminScreen(),
+            ),
+            (route) => false,
+          );
         }
       }
 

@@ -1,3 +1,4 @@
+import 'package:actitivy_point_calculator/View/Registration%20Screen/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -8,11 +9,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("data"),
+        title: Text("home screen"),
         actions: [
           IconButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => RegistrationScreen()),
+                );
               },
               icon: Icon(Icons.abc))
         ],

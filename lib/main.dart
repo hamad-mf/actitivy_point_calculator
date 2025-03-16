@@ -1,6 +1,6 @@
 import 'package:actitivy_point_calculator/Controller/login_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/registration_screen_controller.dart';
-import 'package:actitivy_point_calculator/View/Login%20Screen/login_screen.dart';
+import 'package:actitivy_point_calculator/View/Profile%20Selection%20Screen/profile_sclection_screen.dart';
 import 'package:actitivy_point_calculator/View/Registration%20Screen/registration_screen.dart';
 
 import 'package:actitivy_point_calculator/firebase_options.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: RegistrationScreen(),
+        home: ProfileSclectionScreen(),
       ),
     );
   }
