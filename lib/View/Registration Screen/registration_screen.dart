@@ -83,11 +83,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
               TextButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
                   },
                   child: Text("Already have an account, Login Now"))
             ],

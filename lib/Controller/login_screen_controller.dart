@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:actitivy_point_calculator/Utils/app_utils.dart';
 import 'package:actitivy_point_calculator/View/Admin%20Screen/admin_screen.dart';
+import 'package:actitivy_point_calculator/View/Custom%20Bottom%20NavigationBar/custom_bottom_nabar_screen.dart';
 import 'package:actitivy_point_calculator/View/Home%20Screen/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreenController with ChangeNotifier {
   bool isloading = false;
@@ -30,21 +33,19 @@ class LoginScreenController with ChangeNotifier {
         log(role);
 
         if (role == 'user') {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true);
+          
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
+              builder: (context) => CustomBottomNabarScreen(),
             ),
             (route) => false,
           );
         } else if (role == 'admin') {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AdminScreen(),
-            ),
-            (route) => false,
-          );
+          AppUtils.showOnetimeSnackbar(
+              context: context, message: "check the credentials");
         }
       }
 
