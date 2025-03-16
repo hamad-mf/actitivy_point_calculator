@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "548020309706",
+    "project_id": "acitiviypoint",
+    "storage_bucket": "acitiviypoint.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548020309706:android:8b194576efb7dc8d236e33",
+        "android_client_info": {
+          "package_name": "com.example.actitivy_point_calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFiq7u-0Gx3uZNlwJRwxJW3K9EqKcIpI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
