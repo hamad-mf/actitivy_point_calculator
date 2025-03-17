@@ -13,7 +13,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  TextEditingController nameController = TextEditingController();
+  TextEditingController registernoController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +28,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Name';
+                  }
+
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: registernoController,
+                decoration: InputDecoration(
+                  labelText: 'Register No',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Register no';
+                  }
+
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -73,6 +104,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           context
                               .read<RegistrationScreenController>()
                               .onRegistration(
+                                  registerno: registernoController.text,
+                                  name: nameController.text,
                                   role: "user",
                                   context: context,
                                   email: emailController.text,

@@ -11,7 +11,10 @@ class RegistrationScreenController with ChangeNotifier {
   bool isLoading = false;
 
   Future<void> onRegistration(
+
       {required String email,
+      required String name,
+      required String registerno,
       required String password,
       required String role,
       required BuildContext context}) async {
@@ -31,7 +34,7 @@ class RegistrationScreenController with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
-          .set({'role': role});
+          .set({'role': role,'name':name,'register_no':registerno});
       if (credential.user?.uid != null) {
         AppUtils.showOnetimeSnackbar(
             bg: Colors.green,

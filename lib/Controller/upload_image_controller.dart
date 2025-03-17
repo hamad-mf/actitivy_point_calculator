@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:actitivy_point_calculator/Utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +29,8 @@ class UploadImageController with ChangeNotifier {
 
   // Upload the image to Imgur
   Future<String?> uploadImageToImgur(File imageFile) async {
-    const String clientId = '71ef9f46d10df0e'; // Replace with your Imgur Client ID
+    const String clientId =
+        '71ef9f46d10df0e'; // Replace with your Imgur Client ID
     try {
       final request = http.MultipartRequest(
         'POST',
@@ -57,8 +59,12 @@ class UploadImageController with ChangeNotifier {
 
   // Save the image URL to Firestore
   Future<void> saveImageUrlToFirestore({
+    required String activity_category,
+    required String activity,
+    required String date,
     required String imageUrl,
     required String userId,
+    required String description,
     required BuildContext context,
   }) async {
     try {
@@ -67,6 +73,10 @@ class UploadImageController with ChangeNotifier {
           .doc(userId)
           .collection('uploads')
           .add({
+        'activity_category':activity_category,
+        'activity':activity,
+        'date':date,
+        'description':description,
         'image_url': imageUrl,
         'uploaded_at': FieldValue.serverTimestamp(),
       });
@@ -78,10 +88,16 @@ class UploadImageController with ChangeNotifier {
 
   // Handle the entire process: pick, upload, and save
   Future<void> uploadAndSaveImage({
+    required String activity_category,
+    required String activity,
+    required String date,
+    required String description,
     required BuildContext context,
   }) async {
     if (_selectedImage == null) {
       log('No image selected.');
+      AppUtils.showOnetimeSnackbar(
+          context: context, message: "No image selected.", bg: Colors.red);
       return;
     }
 
@@ -95,7 +111,11 @@ class UploadImageController with ChangeNotifier {
         // Save the image URL to Firestore
         final userId = FirebaseAuth.instance.currentUser!.uid;
         await saveImageUrlToFirestore(
+          activity: activity,
+          activity_category: activity_category,
+          date: date,
           imageUrl: imageUrl,
+          description: description,
           userId: userId,
           context: context,
         );
@@ -106,6 +126,10 @@ class UploadImageController with ChangeNotifier {
         notifyListeners();
 
         log('Image uploaded and saved successfully.');
+        AppUtils.showOnetimeSnackbar(
+            context: context,
+            message: "uploaded successfully",
+            bg: Colors.green);
       }
     } catch (e) {
       log('Error during image upload: $e');

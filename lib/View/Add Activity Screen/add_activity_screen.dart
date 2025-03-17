@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:actitivy_point_calculator/Controller/upload_image_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -68,6 +70,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   String? selectedActivity;
   DateTime? selectedDate;
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -102,6 +105,13 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                log(selectedCategory.toString());
+              },
+              icon: Icon(Icons.ac_unit))
+        ],
         title: Text("Add an activity"),
       ),
       body: Padding(
@@ -160,6 +170,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   width: double.infinity,
                   height: 200,
                   child: TextFormField(
+                    controller: _descriptionController,
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
@@ -201,22 +212,40 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   Image.file(uploadController.selectedImage!, height: 200),
                 SizedBox(height: 16),
                 uploadController.isUploading
-                    ? CircularProgressIndicator()
+                    ? Center(child: CircularProgressIndicator())
                     : ElevatedButton(
+                        style: ButtonStyle(
+                            textStyle: WidgetStatePropertyAll(TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                            minimumSize: WidgetStatePropertyAll(
+                                Size(double.infinity, 50)),
+                            foregroundColor:
+                                WidgetStatePropertyAll(Colors.white),
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.blue)),
                         onPressed: () async {
                           await uploadController.uploadAndSaveImage(
+                              activity_category: selectedCategory.toString(),
+                              activity: selectedActivity.toString(),
+                              date: _dateController.text.toString(),
+                              description: _descriptionController.text,
                               context: context);
-                          if (uploadController.uploadedImageUrl != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Image uploaded successfully!'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          }
                         },
-                        child: Text('Upload and Save'),
+                        child: Text('SUBMIT'),
                       ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // ElevatedButton(
+                //     style: ButtonStyle(
+                //         textStyle: WidgetStatePropertyAll(TextStyle(
+                //             fontSize: 16, fontWeight: FontWeight.bold)),
+                //         minimumSize:
+                //             WidgetStatePropertyAll(Size(double.infinity, 50)),
+                //         foregroundColor: WidgetStatePropertyAll(Colors.white),
+                //         backgroundColor: WidgetStatePropertyAll(Colors.blue)),
+                //     onPressed: () {},
+                //     child: Text("SUBMIT"))
               ],
             ],
           ),
