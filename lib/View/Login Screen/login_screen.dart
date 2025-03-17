@@ -1,9 +1,6 @@
-import 'dart:developer';
 
 import 'package:actitivy_point_calculator/Controller/login_screen_controller.dart';
-import 'package:actitivy_point_calculator/View/Home%20Screen/home_screen.dart';
 import 'package:actitivy_point_calculator/View/Registration%20Screen/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

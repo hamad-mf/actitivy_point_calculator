@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:actitivy_point_calculator/View/Custom%20Bottom%20NavigationBar/custom_bottom_nabar_screen.dart';
-import 'package:actitivy_point_calculator/View/Home%20Screen/home_screen.dart';
 import 'package:actitivy_point_calculator/View/Profile%20Selection%20Screen/profile_sclection_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';

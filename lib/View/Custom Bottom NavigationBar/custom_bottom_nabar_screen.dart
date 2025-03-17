@@ -22,9 +22,12 @@ class _CustomBottomNabarScreenState extends State<CustomBottomNabarScreen> {
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.white,
         items: <Widget>[
-          Icon(Icons.home, size: 30),
-     
-          Icon(Icons.person, size: 30),
+          Column(
+            children: [Icon(Icons.home, size: 30), Text("Home")],
+          ),
+          Column(
+            children: [Icon(Icons.person, size: 30), Text("Profile")],
+          ),
         ],
         index: _currentIndex,
         onTap: (index) {

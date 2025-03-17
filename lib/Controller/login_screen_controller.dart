@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:actitivy_point_calculator/Utils/app_utils.dart';
-import 'package:actitivy_point_calculator/View/Admin%20Screen/admin_screen.dart';
 import 'package:actitivy_point_calculator/View/Custom%20Bottom%20NavigationBar/custom_bottom_nabar_screen.dart';
-import 'package:actitivy_point_calculator/View/Home%20Screen/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
