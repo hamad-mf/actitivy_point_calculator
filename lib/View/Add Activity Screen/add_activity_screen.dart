@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:actitivy_point_calculator/Controller/upload_image_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -71,6 +73,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   DateTime? selectedDate;
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  String? name;
+  String? regno;
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -100,6 +104,30 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchName(); // Fetch the user's name when the screen loads
+  }
+
+  Future<void> fetchName() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final DocumentSnapshot<Map<String, dynamic>> userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          name = userDoc.data()!['name'];
+          regno = userDoc.data()!['register_no'];
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final uploadController = context.watch<UploadImageController>();
 
@@ -108,7 +136,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                log(selectedCategory.toString());
+                log(name.toString());
               },
               icon: Icon(Icons.ac_unit))
         ],
@@ -225,11 +253,21 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                                 WidgetStatePropertyAll(Colors.blue)),
                         onPressed: () async {
                           await uploadController.uploadAndSaveImage(
+                              status: "not verified",
+                              regno: regno!,
+                              name: name!,
                               activity_category: selectedCategory.toString(),
                               activity: selectedActivity.toString(),
                               date: _dateController.text.toString(),
                               description: _descriptionController.text,
                               context: context);
+                          setState(() {
+                            _dateController.clear();
+                            _descriptionController.clear();
+                            selectedActivity = null;
+                            selectedCategory = null;
+                            log("Cleared");
+                          });
                         },
                         child: Text('SUBMIT'),
                       ),

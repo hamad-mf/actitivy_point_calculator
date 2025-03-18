@@ -1,6 +1,8 @@
+import 'package:actitivy_point_calculator/Controller/admin_login_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/login_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/registration_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/upload_image_controller.dart';
+import 'package:actitivy_point_calculator/Controller/your_activities_screen_controller.dart';
 import 'package:actitivy_point_calculator/View/Splash%20Screen/splash_screen.dart';
 
 import 'package:actitivy_point_calculator/firebase_options.dart';
@@ -25,6 +27,10 @@ class MyApp extends StatelessWidget {
             create: (context) => RegistrationScreenController()),
         ChangeNotifierProvider(create: (context) => LoginScreenController()),
         ChangeNotifierProvider(create: (context) => UploadImageController()),
+        ChangeNotifierProvider(
+            create: (context) => AdminLoginScreenController()),
+        ChangeNotifierProvider(
+            create: (context) => YourActivitiesScreenController()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

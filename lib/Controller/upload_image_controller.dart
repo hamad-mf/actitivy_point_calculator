@@ -59,6 +59,9 @@ class UploadImageController with ChangeNotifier {
 
   // Save the image URL to Firestore
   Future<void> saveImageUrlToFirestore({
+    required String status,
+    required String name,
+    required String regno,
     required String activity_category,
     required String activity,
     required String date,
@@ -69,14 +72,17 @@ class UploadImageController with ChangeNotifier {
   }) async {
     try {
       await FirebaseFirestore.instance
-          .collection('certificates')
+          .collection('activities')
           .doc(userId)
           .collection('uploads')
           .add({
-        'activity_category':activity_category,
-        'activity':activity,
-        'date':date,
-        'description':description,
+        'status':status,
+        'register_no':regno,
+        'name':name,
+        'activity_category': activity_category,
+        'activity': activity,
+        'date': date,
+        'description': description,
         'image_url': imageUrl,
         'uploaded_at': FieldValue.serverTimestamp(),
       });
@@ -88,6 +94,9 @@ class UploadImageController with ChangeNotifier {
 
   // Handle the entire process: pick, upload, and save
   Future<void> uploadAndSaveImage({
+    required String status,
+    required String regno,
+    required String name,
     required String activity_category,
     required String activity,
     required String date,
@@ -111,6 +120,9 @@ class UploadImageController with ChangeNotifier {
         // Save the image URL to Firestore
         final userId = FirebaseAuth.instance.currentUser!.uid;
         await saveImageUrlToFirestore(
+          status:status,
+          regno:regno,
+          name:name,
           activity: activity,
           activity_category: activity_category,
           date: date,

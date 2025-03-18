@@ -1,5 +1,6 @@
 import 'package:actitivy_point_calculator/View/Add%20Activity%20Screen/add_activity_screen.dart';
 import 'package:actitivy_point_calculator/View/Profile%20Selection%20Screen/profile_sclection_screen.dart';
+import 'package:actitivy_point_calculator/View/Your%20Activities/your_activities_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,19 +87,28 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 40,
           ),
-          Container(
-            width: 320,
-            height: 80,
-            decoration: BoxDecoration(
-                color: Colors.blue,
-                border: Border.all(color: Colors.black, width: 1)),
-            child: Center(
-              child: Text(
-                "View Submitted Activities",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => YourActivitiesScreen(),
+                  ));
+            },
+            child: Container(
+              width: 320,
+              height: 80,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  border: Border.all(color: Colors.black, width: 1)),
+              child: Center(
+                child: Text(
+                  "View Submitted Activities",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

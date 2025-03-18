@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:actitivy_point_calculator/View/Admin%20Screen/admin_screen.dart';
 import 'package:actitivy_point_calculator/View/Custom%20Bottom%20NavigationBar/custom_bottom_nabar_screen.dart';
 import 'package:actitivy_point_calculator/View/Profile%20Selection%20Screen/profile_sclection_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -27,15 +28,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Check both user and admin login statuses
     bool isUserLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-   
+    bool isAdminLoggedIn = prefs.getBool('isAdminLoggedIn') ?? false;
     log(isUserLoggedIn.toString());
     // Wait for 4 seconds, then navigate based on login status
     Timer(Duration(seconds: 2), () {
       if (isUserLoggedIn) {
-        // Navigate to Admin HomeScreen
+        // Navigate to user HomeScreen
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (_) => CustomBottomNabarScreen()));
-      } else {
+      } else if(isAdminLoggedIn){
+ // Navigate to admin HomeScreen
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => AdminScreen()));
+      }
+      
+      else {
         // Navigate to Profile Selection Screen
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => ProfileSclectionScreen()));
