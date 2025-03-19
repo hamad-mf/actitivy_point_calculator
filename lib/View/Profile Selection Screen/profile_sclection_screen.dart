@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:actitivy_point_calculator/View/Admin%20Login%20Screen/admin_login_screen.dart';
 import 'package:actitivy_point_calculator/View/Login%20Screen/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileSclectionScreen extends StatelessWidget {
   const ProfileSclectionScreen({super.key});

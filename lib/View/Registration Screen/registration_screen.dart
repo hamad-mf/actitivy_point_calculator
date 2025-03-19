@@ -104,6 +104,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           context
                               .read<RegistrationScreenController>()
                               .onRegistration(
+                                  total_points: 0,
                                   registerno: registernoController.text,
                                   name: nameController.text,
                                   role: "user",
@@ -111,6 +112,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   email: emailController.text,
                                   password: passwordController.text);
                         }
+
+                        nameController.clear();
+                        registernoController.clear();
+                        emailController.clear();
+                        passwordController.clear();
                       },
                       child: Text('Register'),
                     ),

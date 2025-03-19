@@ -59,6 +59,7 @@ class UploadImageController with ChangeNotifier {
 
   // Save the image URL to Firestore
   Future<void> saveImageUrlToFirestore({
+    required num req_point,
     required String status,
     required String name,
     required String regno,
@@ -76,6 +77,7 @@ class UploadImageController with ChangeNotifier {
           .doc(userId)
           .collection('uploads')
           .add({
+        'req_point':req_point,
         'status':status,
         'register_no':regno,
         'name':name,
@@ -94,6 +96,7 @@ class UploadImageController with ChangeNotifier {
 
   // Handle the entire process: pick, upload, and save
   Future<void> uploadAndSaveImage({
+    required num req_point,
     required String status,
     required String regno,
     required String name,
@@ -120,6 +123,7 @@ class UploadImageController with ChangeNotifier {
         // Save the image URL to Firestore
         final userId = FirebaseAuth.instance.currentUser!.uid;
         await saveImageUrlToFirestore(
+          req_point:req_point,
           status:status,
           regno:regno,
           name:name,

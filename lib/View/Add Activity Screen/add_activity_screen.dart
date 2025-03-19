@@ -68,6 +68,51 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     ],
   };
 
+  final Map<String, int> pointsMap = {
+  "Paper Presentations": 10,
+  "Project Competitions": 15,
+  "Hackathons": 20,
+  "Technical Workshops": 10,
+  "Technical Internships": 15,
+  "Coding Contests": 12,
+  "Patent Filing": 25,
+  "Startup or Innovation Projects": 30,
+
+  "University/College Sports Competitions": 10,
+  "Intercollegiate Tournaments": 12,
+  "District/National Level Participation": 15,
+  "Marathons & Adventure Activities": 10,
+  "Yoga & Fitness Events": 8,
+
+  "Music, Dance, and Arts Competitions": 10,
+  "Drama & Theater Performances": 12,
+  "Photography & Short Film Contests": 10,
+  "Cultural Fest Participation": 8,
+
+  "NSS Participation": 10,
+  "Blood Donation Camps": 8,
+  "Environmental Awareness Programs": 10,
+  "Teaching Underprivileged Students": 12,
+  "Disaster Relief Volunteering": 15,
+
+  "Event Coordinator": 10,
+  "Student Club Leadership": 15,
+  "Class Representative": 12,
+  "Placement Cell Volunteering": 10,
+  "Committee Member in Professional Societies": 12,
+
+  "Internships & Training Programs": 15,
+  "Workshops on Career Development": 10,
+  "Industrial Visits": 8,
+  "Freelancing Projects": 15,
+  "Part-Time Jobs Related to the Field": 12,
+
+  "NPTEL/SWAYAM/EdX/Udemy/Coursera Certifications": 10,
+  "MOOCs": 8,
+  "Skill Development & Training Programs": 10,
+};
+
+
   String? selectedCategory;
   String? selectedActivity;
   DateTime? selectedDate;
@@ -252,7 +297,10 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                             backgroundColor:
                                 WidgetStatePropertyAll(Colors.blue)),
                         onPressed: () async {
+
+                          num points = pointsMap[selectedActivity] ?? 0;
                           await uploadController.uploadAndSaveImage(
+                            req_point: points,
                               status: "not verified",
                               regno: regno!,
                               name: name!,
