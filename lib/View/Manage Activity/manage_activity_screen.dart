@@ -1,15 +1,21 @@
+import 'dart:developer';
+
+import 'package:actitivy_point_calculator/Controller/manage_activity_screen_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ManageActivityScreen extends StatefulWidget {
-  final String studentName;
-  final String registerNo;
-  final String activityName;
-  final String activityCategoryName;
-  final String date;
-  final String description;
-  final String img_url;
-  final num req_points;
-  final String status;
+  final String? studentName;
+  final String? registerNo;
+  final String? activityName;
+  final String? activityCategoryName;
+  final String? date;
+  final String? description;
+  final String? img_url;
+  final num? req_points;
+  final String? status;
+  final String? userid;
+  final String? ordereditemid;
 
   const ManageActivityScreen({
     super.key,
@@ -22,6 +28,8 @@ class ManageActivityScreen extends StatefulWidget {
     required this.img_url,
     required this.req_points,
     required this.status,
+    required this.userid,
+    required this.ordereditemid,
   });
 
   @override
@@ -33,8 +41,24 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Manage Activity"),
-        backgroundColor: Colors.blue,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
+        title: Text(
+          "Manage Activity",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue[900], // Dark blue app bar
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,33 +73,42 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow("Student Name", widget.studentName),
-                  _buildDetailRow("Register Number", widget.registerNo),
-                  _buildDetailRow("Category", widget.activityCategoryName),
-                  _buildDetailRow("Activity", widget.activityName),
-                  _buildDetailRow("Date", widget.date),
+                  _buildDetailRow("Student Name", widget.studentName ?? "N/A"),
                   _buildDetailRow(
-                      "Required Points", widget.req_points.toString()),
-                  _buildDetailRow("Status", widget.status),
+                      "Register Number", widget.registerNo ?? "N/A"),
+                  _buildDetailRow(
+                      "Category", widget.activityCategoryName ?? "N/A"),
+                  _buildDetailRow("Activity", widget.activityName ?? "N/A"),
+                  _buildDetailRow("Date", widget.date ?? "N/A"),
+                  _buildDetailRow("Required Points",
+                      widget.req_points?.toString() ?? "N/A"),
+                  _buildDetailRow("Status", widget.status ?? "N/A"),
                   SizedBox(height: 12),
                   Text(
                     "Description:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.blue[900],
+                    ),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    widget.description,
-                    style: TextStyle(fontSize: 14),
+                    widget.description ?? "N/A",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
                   ),
                   SizedBox(height: 16),
-                  if (widget.img_url.isNotEmpty)
+                  if (widget.img_url != null && widget.img_url!.isNotEmpty)
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                FullScreenImage(imageUrl: widget.img_url),
+                                FullScreenImage(imageUrl: widget.img_url!),
                           ),
                         );
                       },
@@ -84,17 +117,28 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
-                            widget.img_url,
+                            widget.img_url!,
                             height: 250,
                             width: double.infinity,
                             fit: BoxFit.cover,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
-                              return Center(child: CircularProgressIndicator());
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.blue[900],
+                                ),
+                              );
                             },
                             errorBuilder: (context, error, stackTrace) {
                               return Center(
-                                  child: Text("Image failed to load"));
+                                child: Text(
+                                  "Image failed to load",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              );
                             },
                           ),
                         ),
@@ -106,9 +150,101 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      
-                      ElevatedButton(onPressed: () {}, child: Text("Accept")),
-                      ElevatedButton(onPressed: () {}, child: Text("Decline")),
+                      // Accept Button
+                      ElevatedButton(
+                        onPressed: () async {
+                          log(widget.userid.toString());
+                          // Access the controller
+                          final controller =
+                              Provider.of<ManageActivityScreenController>(
+                                  context,
+                                  listen: false);
+
+                          // Call the function to update status
+                          await controller.changeOrderStatus(
+                            req_points: widget.req_points ?? 0,
+                            updatedStatus: "accepted",
+                            userid: widget.userid ?? "N/A",
+                            ordereditemid: widget.ordereditemid ?? "N/A",
+                          );
+
+                          // Show a success message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Status updated to accepted."),
+                              backgroundColor: Colors.blue[800],
+                            ),
+                          );
+
+                          // Optionally, update the UI to reflect the new status
+                          setState(() {
+                            // If you want to update the displayed status
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[800], // Dark blue button
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Accept",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      // Decline Button
+                      ElevatedButton(
+                        onPressed: () async {
+                          // Access the controller
+                          final controller =
+                              Provider.of<ManageActivityScreenController>(
+                                  context,
+                                  listen: false);
+
+                          // Call the function to update status
+                          await controller.changeOrderStatus(
+                            req_points: widget.req_points ?? 0,
+                            updatedStatus: "declined",
+                            userid: widget.userid ?? "N/A",
+                            ordereditemid: widget.ordereditemid ?? "N/A",
+                          );
+
+                          // Show a success message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Status updated to declined."),
+                              backgroundColor: Colors.blue[800],
+                            ),
+                          );
+
+                          // Optionally, update the UI to reflect the new status
+                          setState(() {
+                            // If you want to update the displayed status
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[800], // Dark blue button
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Decline",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],
@@ -127,12 +263,19 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
         children: [
           Text(
             "$label: ",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.blue[900],
+            ),
           ),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -167,12 +310,22 @@ class FullScreenImage extends StatelessWidget {
                   fit: BoxFit.contain,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.blue[900],
+                      ),
+                    );
                   },
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
-                        child: Text("Image failed to load",
-                            style: TextStyle(color: Colors.white)));
+                      child: Text(
+                        "Image failed to load",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),

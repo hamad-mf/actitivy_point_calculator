@@ -1,6 +1,5 @@
 import 'package:actitivy_point_calculator/Controller/registration_screen_controller.dart';
 import 'package:actitivy_point_calculator/View/Login%20Screen/login_screen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,11 +14,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController registernoController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration'),
+        title: Text(
+          'Registration',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue[900], // Dark blue app bar
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,41 +37,87 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Name Field
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: Colors.blue[900],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                      width: 2,
+                    ),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Name';
                   }
-
                   return null;
                 },
               ),
               SizedBox(height: 16),
+              // Register No Field
               TextFormField(
                 controller: registernoController,
                 decoration: InputDecoration(
                   labelText: 'Register No',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: Colors.blue[900],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                      width: 2,
+                    ),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Register no';
                   }
-
                   return null;
                 },
               ),
               SizedBox(height: 16),
+              // Email Field
               TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: Colors.blue[900],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                      width: 2,
+                    ),
+                  ),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
@@ -78,11 +133,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 },
               ),
               SizedBox(height: 16),
+              // Password Field
               TextFormField(
                 controller: passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    color: Colors.blue[900],
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.blue[900]!,
+                      width: 2,
+                    ),
+                  ),
                 ),
                 obscureText: true,
                 validator: (value) {
@@ -96,6 +167,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 },
               ),
               SizedBox(height: 24),
+              // Register Button
               context.watch<RegistrationScreenController>().isLoading
                   ? CircularProgressIndicator.adaptive()
                   : ElevatedButton(
@@ -118,19 +190,46 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         emailController.clear();
                         passwordController.clear();
                       },
-                      child: Text('Register'),
-                    ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[800], // Dark blue button
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      (route) => false,
-                    );
-                  },
-                  child: Text("Already have an account, Login Now"))
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+              SizedBox(height: 16),
+              // Login Now Button
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                child: Text(
+                  "Already have an account? Login Now",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue[900], // Dark blue text
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

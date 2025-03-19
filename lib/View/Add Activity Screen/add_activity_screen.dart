@@ -69,49 +69,42 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   };
 
   final Map<String, int> pointsMap = {
-  "Paper Presentations": 10,
-  "Project Competitions": 15,
-  "Hackathons": 20,
-  "Technical Workshops": 10,
-  "Technical Internships": 15,
-  "Coding Contests": 12,
-  "Patent Filing": 25,
-  "Startup or Innovation Projects": 30,
-
-  "University/College Sports Competitions": 10,
-  "Intercollegiate Tournaments": 12,
-  "District/National Level Participation": 15,
-  "Marathons & Adventure Activities": 10,
-  "Yoga & Fitness Events": 8,
-
-  "Music, Dance, and Arts Competitions": 10,
-  "Drama & Theater Performances": 12,
-  "Photography & Short Film Contests": 10,
-  "Cultural Fest Participation": 8,
-
-  "NSS Participation": 10,
-  "Blood Donation Camps": 8,
-  "Environmental Awareness Programs": 10,
-  "Teaching Underprivileged Students": 12,
-  "Disaster Relief Volunteering": 15,
-
-  "Event Coordinator": 10,
-  "Student Club Leadership": 15,
-  "Class Representative": 12,
-  "Placement Cell Volunteering": 10,
-  "Committee Member in Professional Societies": 12,
-
-  "Internships & Training Programs": 15,
-  "Workshops on Career Development": 10,
-  "Industrial Visits": 8,
-  "Freelancing Projects": 15,
-  "Part-Time Jobs Related to the Field": 12,
-
-  "NPTEL/SWAYAM/EdX/Udemy/Coursera Certifications": 10,
-  "MOOCs": 8,
-  "Skill Development & Training Programs": 10,
-};
-
+    "Paper Presentations": 10,
+    "Project Competitions": 15,
+    "Hackathons": 20,
+    "Technical Workshops": 10,
+    "Technical Internships": 15,
+    "Coding Contests": 12,
+    "Patent Filing": 25,
+    "Startup or Innovation Projects": 30,
+    "University/College Sports Competitions": 10,
+    "Intercollegiate Tournaments": 12,
+    "District/National Level Participation": 15,
+    "Marathons & Adventure Activities": 10,
+    "Yoga & Fitness Events": 8,
+    "Music, Dance, and Arts Competitions": 10,
+    "Drama & Theater Performances": 12,
+    "Photography & Short Film Contests": 10,
+    "Cultural Fest Participation": 8,
+    "NSS Participation": 10,
+    "Blood Donation Camps": 8,
+    "Environmental Awareness Programs": 10,
+    "Teaching Underprivileged Students": 12,
+    "Disaster Relief Volunteering": 15,
+    "Event Coordinator": 10,
+    "Student Club Leadership": 15,
+    "Class Representative": 12,
+    "Placement Cell Volunteering": 10,
+    "Committee Member in Professional Societies": 12,
+    "Internships & Training Programs": 15,
+    "Workshops on Career Development": 10,
+    "Industrial Visits": 8,
+    "Freelancing Projects": 15,
+    "Part-Time Jobs Related to the Field": 12,
+    "NPTEL/SWAYAM/EdX/Udemy/Coursera Certifications": 10,
+    "MOOCs": 8,
+    "Skill Development & Training Programs": 10,
+  };
 
   String? selectedCategory;
   String? selectedActivity;
@@ -131,7 +124,6 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: Colors.blue, // Header background color
-
             colorScheme: ColorScheme.light(primary: Colors.blue),
             buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
@@ -178,31 +170,70 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                log(name.toString());
-              },
-              icon: Icon(Icons.ac_unit))
-        ],
-        title: Text("Add an activity"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
+        title: Text(
+          "Add an Activity",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue[900], // Dark blue app bar
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Select Activity Type:",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
+              // Select Activity Type
+              InkWell(
+                onTap: () {
+                  log(FirebaseAuth.instance.currentUser!.uid);
+                },
+                child: Text(
+                  "Select Activity Type:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              DropdownButtonFormField<String>(
                 value: selectedCategory,
-                hint: Text("Choose Category"),
+                hint: Text(
+                  "Choose Category",
+                  style: TextStyle(color: Colors.blue[900]),
+                ),
                 isExpanded: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue[900]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue[900]!, width: 2),
+                  ),
+                ),
                 items: activities.keys.map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,
-                    child: Text(category),
+                    child: Text(
+                      category,
+                      style: TextStyle(color: Colors.blue[900]),
+                    ),
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -213,18 +244,42 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 },
               ),
               SizedBox(height: 20),
+              // Select Activity
               if (selectedCategory != null) ...[
-                Text("Select Activity:",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                DropdownButton<String>(
+                Text(
+                  "Select Activity:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900],
+                  ),
+                ),
+                SizedBox(height: 10),
+                DropdownButtonFormField<String>(
                   value: selectedActivity,
-                  hint: Text("Choose Activity"),
+                  hint: Text(
+                    "Choose Activity",
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
                   isExpanded: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue[900]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(color: Colors.blue[900]!, width: 2),
+                    ),
+                  ),
                   items: activities[selectedCategory!]!.map((String activity) {
                     return DropdownMenuItem<String>(
                       value: activity,
-                      child: Text(activity),
+                      child: Text(
+                        activity,
+                        style: TextStyle(color: Colors.blue[900]),
+                      ),
                     );
                   }).toList(),
                   onChanged: (newValue) {
@@ -233,15 +288,19 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     });
                   },
                 ),
-                SizedBox(
-                  height: 30,
+                SizedBox(height: 20),
+                // Description
+                Text(
+                  "Description:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900],
+                  ),
                 ),
-                Text("Description:",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(
-                  width: double.infinity,
-                  height: 200,
+                SizedBox(height: 10),
+                Container(
+                  height: 150,
                   child: TextFormField(
                     controller: _descriptionController,
                     maxLines: null,
@@ -249,20 +308,30 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     keyboardType: TextInputType.multiline,
                     textAlignVertical: TextAlignVertical.top,
                     decoration: InputDecoration(
-                        hintText: "Enter the details",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey.shade400),
-                        ),
-                        contentPadding: EdgeInsets.all(16)),
+                      hintText: "Enter the details",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.blue[900]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide:
+                            BorderSide(color: Colors.blue[900]!, width: 2),
+                      ),
+                      contentPadding: EdgeInsets.all(16),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
+                SizedBox(height: 20),
+                // Select Date
+                Text(
+                  "Select Date:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900],
+                  ),
                 ),
-                Text("Select Date",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 TextField(
                   controller: _dateController,
@@ -270,45 +339,63 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   decoration: InputDecoration(
                     hintText: "DD-MM-YYYY",
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue[900]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(color: Colors.blue[900]!, width: 2),
+                    ),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today, color: Colors.blue),
+                      icon: Icon(Icons.calendar_today, color: Colors.blue[900]),
                       onPressed: () => _selectDate(context),
                     ),
                   ),
                 ),
+                SizedBox(height: 20),
+                // Pick Image Button
                 ElevatedButton(
                   onPressed: uploadController.pickImage,
-                  child: Text('Pick Image'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[800], // Dark blue button
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'Pick Image',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
+                SizedBox(height: 20),
+                // Display Selected Image
                 if (uploadController.selectedImage != null)
                   Image.file(uploadController.selectedImage!, height: 200),
-                SizedBox(height: 16),
+                SizedBox(height: 20),
+                // Submit Button
                 uploadController.isUploading
                     ? Center(child: CircularProgressIndicator())
                     : ElevatedButton(
-                        style: ButtonStyle(
-                            textStyle: WidgetStatePropertyAll(TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                            minimumSize: WidgetStatePropertyAll(
-                                Size(double.infinity, 50)),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blue)),
                         onPressed: () async {
-
                           num points = pointsMap[selectedActivity] ?? 0;
                           await uploadController.uploadAndSaveImage(
+                            userid: FirebaseAuth.instance.currentUser!.uid,
                             req_point: points,
-                              status: "not verified",
-                              regno: regno!,
-                              name: name!,
-                              activity_category: selectedCategory.toString(),
-                              activity: selectedActivity.toString(),
-                              date: _dateController.text.toString(),
-                              description: _descriptionController.text,
-                              context: context);
+                            status: "not verified",
+                            regno: regno!,
+                            name: name!,
+                            activity_category: selectedCategory.toString(),
+                            activity: selectedActivity.toString(),
+                            date: _dateController.text.toString(),
+                            description: _descriptionController.text,
+                            context: context,
+                          );
                           setState(() {
                             _dateController.clear();
                             _descriptionController.clear();
@@ -317,21 +404,23 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                             log("Cleared");
                           });
                         },
-                        child: Text('SUBMIT'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[800], // Dark blue button
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'SUBMIT',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // ElevatedButton(
-                //     style: ButtonStyle(
-                //         textStyle: WidgetStatePropertyAll(TextStyle(
-                //             fontSize: 16, fontWeight: FontWeight.bold)),
-                //         minimumSize:
-                //             WidgetStatePropertyAll(Size(double.infinity, 50)),
-                //         foregroundColor: WidgetStatePropertyAll(Colors.white),
-                //         backgroundColor: WidgetStatePropertyAll(Colors.blue)),
-                //     onPressed: () {},
-                //     child: Text("SUBMIT"))
               ],
             ],
           ),

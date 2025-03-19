@@ -34,15 +34,13 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       if (isUserLoggedIn) {
         // Navigate to user HomeScreen
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => CustomBottomNabarScreen()));
-      } else if(isAdminLoggedIn){
- // Navigate to admin HomeScreen
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => CustomBottomNabarScreen()));
+      } else if (isAdminLoggedIn) {
+        // Navigate to admin HomeScreen
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (_) => AdminScreen()));
-      }
-      
-      else {
+      } else {
         // Navigate to Profile Selection Screen
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => ProfileSclectionScreen()));
@@ -53,9 +51,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // White background
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 200),
             SizedBox(height: 30),
@@ -70,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       textStyle: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.blue[900], // Dark blue text
                       ),
                       speed: Duration(milliseconds: 100),
                     ),

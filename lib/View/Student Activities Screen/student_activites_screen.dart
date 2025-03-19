@@ -43,6 +43,8 @@ class StudentActivitesScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               try {
                 final activityData = docs[index].data() as Map<String, dynamic>;
+                final docid = docs[index].id;
+                final userid = activityData['userid'];
                 final activityName = activityData['activity'] ?? 'No Activity';
                 final activityDate = activityData['date'];
                 final activityStatus = activityData['status'] ?? 'Pending';
@@ -75,10 +77,13 @@ class StudentActivitesScreen extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: InkWell(
                     onTap: () {
+                      log(userid.toString());
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ManageActivityScreen(
+                              ordereditemid: docid,
+                              userid: userid,
                               activityCategoryName: activityCategoryName,
                               activityName: activityName,
                               date: formattedDate,

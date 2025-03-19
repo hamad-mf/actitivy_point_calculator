@@ -1,5 +1,6 @@
 import 'package:actitivy_point_calculator/Controller/admin_login_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/login_screen_controller.dart';
+import 'package:actitivy_point_calculator/Controller/manage_activity_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/registration_screen_controller.dart';
 import 'package:actitivy_point_calculator/Controller/upload_image_controller.dart';
 import 'package:actitivy_point_calculator/Controller/your_activities_screen_controller.dart';
@@ -31,6 +32,8 @@ class MyApp extends StatelessWidget {
             create: (context) => AdminLoginScreenController()),
         ChangeNotifierProvider(
             create: (context) => YourActivitiesScreenController()),
+            ChangeNotifierProvider(
+            create: (context) => ManageActivityScreenController()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
