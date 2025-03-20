@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:actitivy_point_calculator/Controller/manage_activity_screen_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
