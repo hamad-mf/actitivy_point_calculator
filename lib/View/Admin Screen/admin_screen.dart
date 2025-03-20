@@ -1,3 +1,4 @@
+import 'package:actitivy_point_calculator/View/Generate%20Report%20Screen/generate_reports_screen.dart';
 import 'package:actitivy_point_calculator/View/Profile%20Selection%20Screen/profile_sclection_screen.dart';
 import 'package:actitivy_point_calculator/View/Student%20Activities%20Screen/student_activites_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +21,16 @@ class _AdminScreenState extends State<AdminScreen> {
         .snapshots();
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GenerateReportsScreen(),
+              ));
+        },
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: Text(
           "Dashboard",

@@ -66,6 +66,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       "MOOCs",
       "Skill Development & Training Programs"
     ],
+    "Others": ["Others"],
   };
 
   final Map<String, int> pointsMap = {
@@ -385,6 +386,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                         onPressed: () async {
                           num points = pointsMap[selectedActivity] ?? 0;
                           await uploadController.uploadAndSaveImage(
+                            comments: "",
                             userid: FirebaseAuth.instance.currentUser!.uid,
                             req_point: points,
                             status: "not verified",

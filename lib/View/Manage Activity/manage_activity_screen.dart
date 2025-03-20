@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:actitivy_point_calculator/Controller/manage_activity_screen_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,18 +40,95 @@ class ManageActivityScreen extends StatefulWidget {
 final TextEditingController _commentController = TextEditingController();
 
 class _ManageActivityScreenState extends State<ManageActivityScreen> {
+  bool _decisionMade = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDecisionMade(); // Fetch decisionMade from Firestore when the screen loads
+  }
+
+  // Fetch decisionMade from Firestore
+  Future<void> _fetchDecisionMade() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('activities')
+          .doc(widget.userid)
+          .collection('uploads')
+          .doc(widget.ordereditemid)
+          .get();
+
+      if (doc.exists) {
+        final decisionMade = doc['decisionMade'] ?? false;
+        setState(() {
+          _decisionMade = decisionMade;
+        });
+      }
+    } catch (e) {
+      print("Error fetching decisionMade: $e");
+    }
+  }
+
+  // Update decisionMade in Firestore and locally
+  Future<void> _updateDecision(bool decisionMade) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('activities')
+          .doc(widget.userid)
+          .collection('uploads')
+          .doc(widget.ordereditemid)
+          .update({'decisionMade': decisionMade});
+
+      setState(() {
+        _decisionMade = decisionMade;
+      });
+    } catch (e) {
+      print("Error updating decisionMade: $e");
+    }
+  }
+
+  // Show edit confirmation dialog
+  Future<void> _showEditConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Decision'),
+          content: Text('Do you want to edit your decision?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                _updateDecision(false); // Reset decisionMade to false
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: Text(
           "Manage Activity",
           style: TextStyle(
@@ -76,14 +154,11 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildDetailRow("Student Name", widget.studentName ?? "N/A"),
-                  _buildDetailRow(
-                      "Register Number", widget.registerNo ?? "N/A"),
-                  _buildDetailRow(
-                      "Category", widget.activityCategoryName ?? "N/A"),
+                  _buildDetailRow("Register Number", widget.registerNo ?? "N/A"),
+                  _buildDetailRow("Category", widget.activityCategoryName ?? "N/A"),
                   _buildDetailRow("Activity", widget.activityName ?? "N/A"),
                   _buildDetailRow("Date", widget.date ?? "N/A"),
-                  _buildDetailRow("Required Points",
-                      widget.req_points?.toString() ?? "N/A"),
+                  _buildDetailRow("Required Points", widget.req_points?.toString() ?? "N/A"),
                   _buildDetailRow("Status", widget.status ?? "N/A"),
                   SizedBox(height: 12),
                   Text(
@@ -109,8 +184,7 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                FullScreenImage(imageUrl: widget.img_url!),
+                            builder: (context) => FullScreenImage(imageUrl: widget.img_url!),
                           ),
                         );
                       },
@@ -146,9 +220,7 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                         ),
                       ),
                     ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Text(
                     "Add Comment(optional):",
                     style: TextStyle(
@@ -173,61 +245,110 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              BorderSide(color: Colors.blue[900]!, width: 2),
+                          borderSide: BorderSide(color: Colors.blue[900]!, width: 2),
                         ),
                         contentPadding: EdgeInsets.all(16),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Accept Button
-                      ElevatedButton(
-                        onPressed: () async {
-                          log(widget.userid.toString());
-                          // Access the controller
-                          final controller =
-                              Provider.of<ManageActivityScreenController>(
-                                  context,
-                                  listen: false);
+                  SizedBox(height: 20),
+                  if (!_decisionMade)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Accept Button
+                        ElevatedButton(
+                          onPressed: () async {
+                            final controller = Provider.of<ManageActivityScreenController>(context, listen: false);
+                            await controller.changeOrderStatus(
+                              comment: _commentController.text,
+                              req_points: widget.req_points ?? 0,
+                              updatedStatus: "accepted",
+                              userid: widget.userid ?? "N/A",
+                              ordereditemid: widget.ordereditemid ?? "N/A",
+                            );
 
-                          // Call the function to update status
-                          await controller.changeOrderStatus(
-                            comment: _commentController.text,
-                            req_points: widget.req_points ?? 0,
-                            updatedStatus: "accepted",
-                            userid: widget.userid ?? "N/A",
-                            ordereditemid: widget.ordereditemid ?? "N/A",
-                          );
+                            // Update decisionMade in Firestore
+                            await _updateDecision(true);
 
-                          // Show a success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Status updated to accepted."),
-                              backgroundColor: Colors.blue[800],
+                            // Show success message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Status updated to accepted."),
+                                backgroundColor: Colors.blue[800],
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[800], // Dark blue button
+                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          );
+                          ),
+                          child: Text(
+                            "Accept",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // Decline Button
+                        ElevatedButton(
+                          onPressed: () async {
+                            final controller = Provider.of<ManageActivityScreenController>(context, listen: false);
+                            await controller.changeOrderStatus(
+                              comment: _commentController.text,
+                              req_points: widget.req_points ?? 0,
+                              updatedStatus: "declined",
+                              userid: widget.userid ?? "N/A",
+                              ordereditemid: widget.ordereditemid ?? "N/A",
+                            );
 
-                          // Optionally, update the UI to reflect the new status
-                          setState(() {
-                            // If you want to update the displayed status
-                          });
-                        },
+                            // Update decisionMade in Firestore
+                            await _updateDecision(true);
+
+                            // Show success message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Status updated to declined."),
+                                backgroundColor: Colors.blue[800],
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[800], // Dark blue button
+                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Decline",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (_decisionMade)
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _showEditConfirmationDialog,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue[800], // Dark blue button
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
+                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: Text(
-                          "Accept",
+                          "Edit",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -235,56 +356,7 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                           ),
                         ),
                       ),
-                      // Decline Button
-                      ElevatedButton(
-                        onPressed: () async {
-                          // Access the controller
-                          final controller =
-                              Provider.of<ManageActivityScreenController>(
-                                  context,
-                                  listen: false);
-
-                          // Call the function to update status
-                          await controller.changeOrderStatus(
-                            comment: _commentController.text,
-                            req_points: widget.req_points ?? 0,
-                            updatedStatus: "declined",
-                            userid: widget.userid ?? "N/A",
-                            ordereditemid: widget.ordereditemid ?? "N/A",
-                          );
-
-                          // Show a success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Status updated to declined."),
-                              backgroundColor: Colors.blue[800],
-                            ),
-                          );
-
-                          // Optionally, update the UI to reflect the new status
-                          setState(() {
-                            // If you want to update the displayed status
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[800], // Dark blue button
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          "Decline",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                    ),
                 ],
               ),
             ),
