@@ -36,6 +36,8 @@ class ManageActivityScreen extends StatefulWidget {
   State<ManageActivityScreen> createState() => _ManageActivityScreenState();
 }
 
+final TextEditingController _commentController = TextEditingController();
+
 class _ManageActivityScreenState extends State<ManageActivityScreen> {
   @override
   Widget build(BuildContext context) {
@@ -147,6 +149,40 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
                   SizedBox(
                     height: 20,
                   ),
+                  Text(
+                    "Add Comment(optional):",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.blue[900],
+                    ),
+                  ),
+                  Container(
+                    height: 100,
+                    child: TextFormField(
+                      controller: _commentController,
+                      maxLines: null,
+                      expands: true,
+                      keyboardType: TextInputType.multiline,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: InputDecoration(
+                        hintText: "Enter...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.blue[900]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              BorderSide(color: Colors.blue[900]!, width: 2),
+                        ),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -162,6 +198,7 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
 
                           // Call the function to update status
                           await controller.changeOrderStatus(
+                            comment: _commentController.text,
                             req_points: widget.req_points ?? 0,
                             updatedStatus: "accepted",
                             userid: widget.userid ?? "N/A",
@@ -209,6 +246,7 @@ class _ManageActivityScreenState extends State<ManageActivityScreen> {
 
                           // Call the function to update status
                           await controller.changeOrderStatus(
+                            comment: _commentController.text,
                             req_points: widget.req_points ?? 0,
                             updatedStatus: "declined",
                             userid: widget.userid ?? "N/A",

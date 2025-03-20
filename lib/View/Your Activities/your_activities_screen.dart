@@ -211,11 +211,29 @@ class _YourActivitiesScreenState extends State<YourActivitiesScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          "Description: ${activitiesItem['description']}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Description: ${activitiesItem['description']}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Comments: ${activitiesItem['comments']}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
